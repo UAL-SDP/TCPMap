@@ -1,5 +1,7 @@
 package pt.ual.sdp;
 
+import com.sun.tools.javac.Main;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -11,13 +13,13 @@ import java.util.Scanner;
 class MainNodeRegister extends Thread {
     private int port;
     private int nodeCount;
-    private Map<String, ParticipantNodeRecord> nodes;
+    private MainNode mainNode;
 
-    public MainNodeRegister(int port) {
+    public MainNodeRegister(MainNode mainNode, int port) {
         super();
+        this.mainNode = mainNode;
         this.port = port;
         this.nodeCount = 1;
-        this.nodes = new HashMap<>();
     }
 
     @Override
@@ -48,7 +50,7 @@ class MainNodeRegister extends Thread {
             int nodePort = Integer.parseInt(scanner.nextLine());
             int nodeId = nodeCount++;
             ParticipantNodeRecord nodeRecord = new ParticipantNodeRecord(nodeAddress, nodePort);
-            nodes.put(String.valueOf(nodeId), nodeRecord);
+            mainNode.getNodes().put(String.valueOf(nodeId), nodeRecord);
             PrintWriter printWriter = null;
             try {
                 printWriter = new PrintWriter(socket.getOutputStream());
@@ -58,24 +60,6 @@ class MainNodeRegister extends Thread {
             }
             printWriter.println(nodeId);
             printWriter.flush();
-        }
-    }
-
-    private class ParticipantNodeRecord {
-        private String address;
-        private int port;
-
-        public ParticipantNodeRecord(String address, int port) {
-            this.address = address;
-            this.port = port;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public int getPort() {
-            return port;
         }
     }
 }
