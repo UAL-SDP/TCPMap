@@ -2,7 +2,6 @@ package pt.ual.sdp;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -12,12 +11,12 @@ import java.util.Scanner;
 class MainNodeRegister extends Thread {
     private int port;
     private int nodeCount;
-    private Map<String, NodeRecord> nodes;
+    private Map<String, ParticipantNodeRecord> nodes;
 
     public MainNodeRegister(int port) {
         super();
         this.port = port;
-        this.nodeCount = 0;
+        this.nodeCount = 1;
         this.nodes = new HashMap<>();
     }
 
@@ -48,7 +47,7 @@ class MainNodeRegister extends Thread {
             }
             int nodePort = Integer.parseInt(scanner.nextLine());
             int nodeId = nodeCount++;
-            NodeRecord nodeRecord = new NodeRecord(nodeAddress, nodePort);
+            ParticipantNodeRecord nodeRecord = new ParticipantNodeRecord(nodeAddress, nodePort);
             nodes.put(String.valueOf(nodeId), nodeRecord);
             PrintWriter printWriter = null;
             try {
@@ -58,14 +57,15 @@ class MainNodeRegister extends Thread {
                 e.printStackTrace();
             }
             printWriter.println(nodeId);
+            printWriter.flush();
         }
     }
 
-    private class NodeRecord {
+    private class ParticipantNodeRecord {
         private String address;
         private int port;
 
-        public NodeRecord(String address, int port) {
+        public ParticipantNodeRecord(String address, int port) {
             this.address = address;
             this.port = port;
         }
