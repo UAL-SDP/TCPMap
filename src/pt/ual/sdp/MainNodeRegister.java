@@ -1,13 +1,9 @@
 package pt.ual.sdp;
 
-import com.sun.tools.javac.Main;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 class MainNodeRegister extends Thread {
@@ -23,7 +19,7 @@ class MainNodeRegister extends Thread {
     }
 
     @Override
-    public synchronized void run() {
+    public synchronized void start() {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(port);
@@ -39,25 +35,13 @@ class MainNodeRegister extends Thread {
                 System.out.println("Could not create socket on accept.");
                 e.printStackTrace();
             }
-            String nodeAddress = socket.getInetAddress().toString();
-            Scanner scanner = null;
-            try {
-                scanner = new Scanner(socket.getInputStream());
-            } catch (IOException e) {
-                System.out.println("Could not read from node socket.");
-                e.printStackTrace();
-            }
+            String nodeAddress = socket.getInetAddress().getHostAddress();
+            Scanner scanner = SocketUtil.getScanner(socket);
             int nodePort = Integer.parseInt(scanner.nextLine());
             int nodeId = nodeCount++;
             ParticipantNodeRecord nodeRecord = new ParticipantNodeRecord(nodeAddress, nodePort);
             mainNode.getNodes().put(String.valueOf(nodeId), nodeRecord);
-            PrintWriter printWriter = null;
-            try {
-                printWriter = new PrintWriter(socket.getOutputStream());
-            } catch (IOException e) {
-                System.out.println("Could not write to node socket.");
-                e.printStackTrace();
-            }
+            PrintWriter printWriter = SocketUtil.getPrintWritter(socket);
             printWriter.println(nodeId);
             printWriter.flush();
         }
