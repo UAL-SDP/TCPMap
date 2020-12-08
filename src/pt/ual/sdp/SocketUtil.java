@@ -26,13 +26,23 @@ public class SocketUtil {
         return printWriter;
     }
 
-    public static Socket getSocket(String mainNodeAddress, int mainNodePort) {
+    public static Socket getSocket(String address, int port) {
         Socket socket = null;
         try {
-            socket = new Socket(mainNodeAddress, mainNodePort);
+            socket = new Socket(address, port);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return socket;
+    }
+
+    public static void closeSocket(Socket socket) {
+        if(socket != null && !socket.isClosed()) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
