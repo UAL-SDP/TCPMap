@@ -10,18 +10,17 @@ public class MainNode {
         this.nodes = new HashMap<>();
     }
 
-    public ParticipantNodeRecord getNode(String key) {
-        int id = hash(key);
-        return nodes.get(id);
+    synchronized public ParticipantNodeRecord getNode(String key) {
+        int id = hash(key, nodes.size());
+        return nodes.get(String.valueOf(id));
     }
 
-    private int hash(String key) {
+    public int hash(String key, int size) {
         int result = 0;
         for (char c : key.toCharArray()) {
             result += c;
         }
-        int id = result % nodes.size();
-        return id;
+        return (result % size) + 1;
     }
 
     synchronized public Map<String, ParticipantNodeRecord> getNodes() {
