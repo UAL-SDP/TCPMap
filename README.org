@@ -1,0 +1,30 @@
+- [2/3] MainNode
+  - [X] Disponibiliza um servidor para registo de nós participantes
+    - [X] Ler a porta (args)
+  - [X] Atribui um identificador a cada participante
+  - [ ] Disponibiliza um servidor para interação com o cliente
+- [2/3] ParticipantNode
+  - [X] Ler o ip e porta do MainNode, e a porta a disponibilizar por Node (argv)
+  - [X] Registar no nó principal
+    - [X] Obter o seu identificador
+  - [ ] Disponibilizar um servidor para participar na disperção
+- [1/5] Client
+  - [-] R K V
+    - [X] Contactar o MainNode
+    - [X] MainNode calcula hash com base em K
+    - [X] MainNode contacta ParticipantNode
+    - [-] ParticipantNode regista K,V
+      - [ ] Verifica que K lhe pertence
+      - [X] Regista K,V e responde OK
+  - [-] C K
+    - [X] Contactar o MainNode
+    - [ ] MainNode calcula hash
+    - [ ] MainNode contacta ParticipantNode
+    - [ ] ParticipantNode envia V para MainNode
+    - [ ] MainNode envia V para Client
+  - [ ] D K
+    - delete
+  - [X] Q
+  - [ ] L
+    - Todos os nós escrevem o conteúdo no seu output
+- [ ] Docker
