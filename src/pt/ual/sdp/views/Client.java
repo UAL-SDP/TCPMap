@@ -1,9 +1,12 @@
 package pt.ual.sdp.views;
 
+import pt.ual.sdp.SocketUtil;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+
 
 public class Client {
     public static void main(String[] args) {
@@ -26,29 +29,30 @@ public class Client {
                     key = commands[1];
                     value = commands[2];
 
-                    socket = getSocket(mainNodeAddress, mainNodePort);
-                    mainNodePrintWriter = getPrintWritter(socket);
+                    socket = SocketUtil.getSocket(mainNodeAddress, mainNodePort);
+                    mainNodePrintWriter = SocketUtil.getPrintWritter(socket);
 
                     mainNodePrintWriter.println(commands[0].toUpperCase());
+                    mainNodePrintWriter.flush();
                     mainNodePrintWriter.println(key);
                     mainNodePrintWriter.flush();
                     mainNodePrintWriter.println(value);
                     mainNodePrintWriter.flush();
 
-                    mainNodeScanner = getScanner(socket);
+                    mainNodeScanner = SocketUtil.getScanner(socket);
                     String response = mainNodeScanner.nextLine();
                     System.out.println(response);
                     break;
                 case "C":
                     key = commands[1];
-                    socket = getSocket(mainNodeAddress, mainNodePort);
-                    mainNodePrintWriter = getPrintWritter(socket);
+                    socket = SocketUtil.getSocket(mainNodeAddress, mainNodePort);
+                    mainNodePrintWriter = SocketUtil.getPrintWritter(socket);
                     mainNodePrintWriter.println(commands[0].toUpperCase());
                     mainNodePrintWriter.flush();
                     mainNodePrintWriter.println(key);
                     mainNodePrintWriter.flush();
 
-                    mainNodeScanner = getScanner(socket);
+                    mainNodeScanner = SocketUtil.getScanner(socket);
                     value = mainNodeScanner.nextLine();
                     System.out.println(value);
                     break;
@@ -72,35 +76,5 @@ public class Client {
             }
 
         }
-    }
-
-    private static Scanner getScanner(Socket socket) {
-        Scanner mainNodeScanner = null;
-        try {
-            mainNodeScanner = new Scanner(socket.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return mainNodeScanner;
-    }
-
-    private static PrintWriter getPrintWritter(Socket socket) {
-        PrintWriter printWriter = null;
-        try {
-            printWriter = new PrintWriter(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return printWriter;
-    }
-
-    private static Socket getSocket(String mainNodeAddress, int mainNodePort) {
-        Socket socket = null;
-        try {
-            socket = new Socket(mainNodeAddress, mainNodePort);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return socket;
     }
 }
