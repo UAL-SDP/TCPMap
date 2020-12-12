@@ -1,5 +1,7 @@
 package pt.ual.sdp;
 
+import pt.ual.sdp.util.SocketUtil;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;

@@ -1,12 +1,15 @@
 package pt.ual.sdp;
 
+import pt.ual.sdp.util.SocketUtil;
+import pt.ual.sdp.views.MainNode;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
-class MainNodeRegister extends Thread {
+public class MainNodeRegister extends Thread {
     private int port;
     private int nodeCount;
     private MainNode mainNode;

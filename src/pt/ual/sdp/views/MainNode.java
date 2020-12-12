@@ -1,4 +1,8 @@
-package pt.ual.sdp;
+package pt.ual.sdp.views;
+
+import pt.ual.sdp.MainNodeClient;
+import pt.ual.sdp.MainNodeRegister;
+import pt.ual.sdp.ParticipantNodeRecord;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +15,7 @@ public class MainNode {
     }
 
     synchronized public ParticipantNodeRecord getNode(String key) {
-        int id = hash(key, nodes.size());
+        int id = hash(key, nodes.size()) +1;
         return nodes.get(String.valueOf(id));
     }
 
@@ -20,7 +24,7 @@ public class MainNode {
         for (char c : key.toCharArray()) {
             result += c;
         }
-        return (result % size) + 1;
+        return (result % size);
     }
 
     synchronized public Map<String, ParticipantNodeRecord> getNodes() {

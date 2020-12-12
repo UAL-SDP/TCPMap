@@ -1,6 +1,6 @@
 package pt.ual.sdp;
 
-class ParticipantNodeRecord {
+public class ParticipantNodeRecord {
     private String address;
     private int port;
 

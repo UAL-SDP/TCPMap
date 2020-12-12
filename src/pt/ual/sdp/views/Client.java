@@ -1,6 +1,6 @@
 package pt.ual.sdp.views;
 
-import pt.ual.sdp.SocketUtil;
+import pt.ual.sdp.util.SocketUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;

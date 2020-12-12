@@ -1,6 +1,7 @@
 package pt.ual.sdp;
 
-import javax.swing.*;
+import pt.ual.sdp.views.MainNode;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

@@ -1,14 +1,17 @@
 package pt.ual.sdp;
 
+import org.junit.jupiter.api.Test;
+import pt.ual.sdp.views.MainNode;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainNodeTest {
 
-    @org.junit.jupiter.api.Test
-    void hash() {
+    @Test
+    void shouldHaveAnHashValueForDifferentKeys() {
         MainNode mainNode = new MainNode();
-        assertEquals(2, mainNode.hash("A", 2));
-        assertEquals(1, mainNode.hash("B", 2));
-        assertEquals(2, mainNode.hash("C", 2));
+        assertEquals(1, mainNode.hash("A", 2));
+        assertEquals(0, mainNode.hash("B", 2));
+        assertEquals(1, mainNode.hash("C", 2));
     }
 }

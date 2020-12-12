@@ -1,4 +1,4 @@
-package pt.ual.sdp;
+package pt.ual.sdp.util;
 
 import java.io.IOException;
 import java.io.PrintWriter;
