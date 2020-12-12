@@ -62,6 +62,10 @@ public class Client {
                     System.exit(0);
                     break;
                 case "L":
+                    socket = SocketUtil.getSocket(mainNodeAddress, mainNodePort);
+                    mainNodePrintWriter = SocketUtil.getPrintWriter(socket);
+                    mainNodePrintWriter.println(commands[0].toUpperCase());
+                    mainNodePrintWriter.flush();
                     break;
                 default:
                     System.out.println("Invalid command.");

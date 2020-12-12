@@ -48,19 +48,59 @@ ParticipantNode -> "ParticipantNodeThread <<Thread>>" ** : create(socket)
    #+ATTR_LATEX: :scale .35
    #+results:
    [[file:figures/main_node_participant.png]]
+
+   #+begin_src plantuml :file figures/l_operation.png :noexport
+@startuml
+box "Client process"
+        participant Client
+end box
+box "MainNode process"
+        participant MainNode
+        participant "MainNodeClient <<Thread>>"
+        participant "MainNodeClientOperation <<Thread>>"
+end box
+box "ParticipantNode process"
+        participant ParticipantNode
+        participant "ParticipantNodeThread <<Thread>>"
+end box
+MainNode -> "MainNodeClient <<Thread>>" ** : create
+Client -> Client : main()
+"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" :  accept()
+Client -> "MainNodeClient <<Thread>>" : connect
+"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" : create socket
+"MainNodeClient <<Thread>>" --> Client : socket
+"MainNodeClient <<Thread>>" -> "MainNodeClientOperation <<Thread>>" ** : create(socket)
+Client -> "MainNodeClientOperation <<Thread>>" : write operation L
+"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : read operation L
+loop participant node records
+        "MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : get address and port from participant node record
+        ParticipantNode -> ParticipantNode : accept()
+        "MainNodeClientOperation <<Thread>>" -> "ParticipantNode" : connect
+        ParticipantNode -> ParticipantNode : create socket
+        ParticipantNode --> "MainNodeClientOperation <<Thread>>" : socket
+        ParticipantNode -> "ParticipantNodeThread <<Thread>>" ** : create(socket)
+        "MainNodeClientOperation <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : write operation L
+        "ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : read operation L
+        "ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : print database contents on stdout
+end
+@enduml
+#+end_src
+   #+ATTR_LATEX: :scale .35
+   #+results:
+   [[file:figures/l_operation.png]]
    
 * Tarefas
-  - [2/3] MainNode
+  - [3/3] MainNode
     - [X] Disponibiliza um servidor para registo de nós participantes
       - [X] Ler a porta (args)
     - [X] Atribui um identificador a cada participante
-    - [ ] Disponibiliza um servidor para interação com o cliente
-  - [2/3] ParticipantNode
+    - [X] Disponibiliza um servidor para interação com o cliente
+  - [3/3] ParticipantNode
     - [X] Ler o ip e porta do MainNode, e a porta a disponibilizar por Node (argv)
     - [X] Registar no nó principal
       - [X] Obter o seu identificador
-    - [ ] Disponibilizar um servidor para participar na disperção
-  - [1/2] Client
+    - [X] Disponibilizar um servidor para participar na disperção
+  - [1/1] Client
     - [3/3] R K V
       - [X] Contactar o MainNode
       - [X] MainNode calcula hash com base em K
@@ -87,6 +127,8 @@ ParticipantNode -> "ParticipantNodeThread <<Thread>>" ** : create(socket)
       - [X] ParticipantNode responde a MainNode
       - [X] MainNode responde a Client
     - [X] Q
-    - [ ] L
-      - Todos os nós escrevem o conteúdo no seu output
+    - [0/0] L
+      - [2/2] Todos os nós escrevem o conteúdo no seu output
+        - [X] Lista de K V, por linha
+        - [X] Se não existir informação: Sem itens
   - [ ] Docker

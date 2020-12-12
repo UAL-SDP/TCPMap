@@ -45,6 +45,17 @@ public class ParticipantNodeThread extends Thread {
                 printWriter.println(response);
                 printWriter.flush();
                 break;
+            case "L":
+                if(participantNode.getDatabase().isEmpty()) {
+                    System.out.println("No itens.");
+                }
+                else {
+                    for (String k : participantNode.getDatabase().keySet()) {
+                        value = participantNode.getDatabase().get(k);
+                        System.out.println(k + " : " + value);
+                    }
+                }
+                break;
             default:
                 break;
         }

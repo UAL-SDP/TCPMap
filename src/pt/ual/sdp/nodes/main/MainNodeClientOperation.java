@@ -62,6 +62,12 @@ public class MainNodeClientOperation extends Thread {
                 clientPrintWriter.flush();
                 break;
             case "L":
+                for (ParticipantNodeRecord participantNodeRecord : mainNode.getNodes().values()) {
+                    participantNodeSocket = getParticipantNodeSocket(participantNodeRecord);
+                    participantNodePrintWriter = SocketUtil.getPrintWriter(participantNodeSocket);
+                    participantNodePrintWriter.println(operation);
+                    participantNodePrintWriter.flush();
+                }
                 break;
         }
 
@@ -69,12 +75,11 @@ public class MainNodeClientOperation extends Thread {
         SocketUtil.closeSocket(participantNodeSocket);
     }
 
-    private Socket getParticipantNodeSocket(String key) {
-        Socket participantNodeSocket;
-        ParticipantNodeRecord node = mainNode.getNode(key);
-        participantNodeSocket = SocketUtil.getSocket(node.getAddress(), node.getPort());
-        return participantNodeSocket;
+    private Socket getParticipantNodeSocket(ParticipantNodeRecord node) {
+        return SocketUtil.getSocket(node.getAddress(), node.getPort());
     }
 
-
+    private Socket getParticipantNodeSocket(String key) {
+        return getParticipantNodeSocket(mainNode.getNode(key));
+    }
 }
