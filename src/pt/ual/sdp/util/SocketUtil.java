@@ -16,7 +16,7 @@ public class SocketUtil {
         return mainNodeScanner;
     }
 
-    public static PrintWriter getPrintWritter(Socket socket) {
+    public static PrintWriter getPrintWriter(Socket socket) {
         PrintWriter printWriter = null;
         try {
             printWriter = new PrintWriter(socket.getOutputStream());

@@ -30,7 +30,7 @@ public class Client {
                     value = commands[2];
 
                     socket = SocketUtil.getSocket(mainNodeAddress, mainNodePort);
-                    mainNodePrintWriter = SocketUtil.getPrintWritter(socket);
+                    mainNodePrintWriter = SocketUtil.getPrintWriter(socket);
 
                     mainNodePrintWriter.println(commands[0].toUpperCase());
                     mainNodePrintWriter.flush();
@@ -46,7 +46,8 @@ public class Client {
                 case "C":
                     key = commands[1];
                     socket = SocketUtil.getSocket(mainNodeAddress, mainNodePort);
-                    mainNodePrintWriter = SocketUtil.getPrintWritter(socket);
+                    mainNodePrintWriter = SocketUtil.getPrintWriter(socket);
+//                    SocketUtil.write(socket, {commands[0].toUpperCase(), key});
                     mainNodePrintWriter.println(commands[0].toUpperCase());
                     mainNodePrintWriter.flush();
                     mainNodePrintWriter.println(key);

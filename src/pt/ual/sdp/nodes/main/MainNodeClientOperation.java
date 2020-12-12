@@ -20,30 +20,45 @@ public class MainNodeClientOperation extends Thread {
         Scanner scanner = SocketUtil.getScanner(clientSocket);
         Socket participantNodeSocket = null;
         String operation = scanner.nextLine();
-        String key, value;
+        String key, value, response;
+        Scanner participantNodeScanner;
+        PrintWriter participantNodePrintWriter;
         switch (operation) {
             case "R":
                 key = scanner.nextLine();
                 value = scanner.nextLine();
-                ParticipantNodeRecord node = mainNode.getNode(key);
-                participantNodeSocket = SocketUtil.getSocket(node.getAddress(), node.getPort());
+                participantNodeSocket = getParticipantNodeSocket(key);
 
-                PrintWriter participantNodePrintWritter = SocketUtil.getPrintWritter(participantNodeSocket);
-                participantNodePrintWritter.println(operation);
-                participantNodePrintWritter.flush();
-                participantNodePrintWritter.println(key);
-                participantNodePrintWritter.flush();
-                participantNodePrintWritter.println(value);
-                participantNodePrintWritter.flush();
+                participantNodePrintWriter = SocketUtil.getPrintWriter(participantNodeSocket);
+                participantNodePrintWriter.println(operation);
+                participantNodePrintWriter.flush();
+                participantNodePrintWriter.println(key);
+                participantNodePrintWriter.flush();
+                participantNodePrintWriter.println(value);
+                participantNodePrintWriter.flush();
 
-                Scanner participantNodeScanner = SocketUtil.getScanner(participantNodeSocket);
-                String response = participantNodeScanner.nextLine();
+                participantNodeScanner = SocketUtil.getScanner(participantNodeSocket);
+                response = participantNodeScanner.nextLine();
 
-                PrintWriter clientPrintWritter = SocketUtil.getPrintWritter(clientSocket);
-                clientPrintWritter.println(response);
-                clientPrintWritter.flush();
+                PrintWriter clientPrintWriter = SocketUtil.getPrintWriter(clientSocket);
+                clientPrintWriter.println(response);
+                clientPrintWriter.flush();
                 break;
             case "C":
+                key = scanner.nextLine();
+                participantNodeSocket = getParticipantNodeSocket(key);
+                participantNodePrintWriter = SocketUtil.getPrintWriter(participantNodeSocket);
+                participantNodePrintWriter.println(operation);
+                participantNodePrintWriter.flush();
+                participantNodePrintWriter.println(key);
+                participantNodePrintWriter.flush();
+
+                participantNodeScanner = SocketUtil.getScanner(participantNodeSocket);
+                response = participantNodeScanner.nextLine();
+
+                clientPrintWriter = SocketUtil.getPrintWriter(clientSocket);
+                clientPrintWriter.println(response);
+                clientPrintWriter.flush();
                 break;
             case "D":
                 break;
@@ -53,6 +68,13 @@ public class MainNodeClientOperation extends Thread {
 
         SocketUtil.closeSocket(clientSocket);
         SocketUtil.closeSocket(participantNodeSocket);
+    }
+
+    private Socket getParticipantNodeSocket(String key) {
+        Socket participantNodeSocket;
+        ParticipantNodeRecord node = mainNode.getNode(key);
+        participantNodeSocket = SocketUtil.getSocket(node.getAddress(), node.getPort());
+        return participantNodeSocket;
     }
 
 

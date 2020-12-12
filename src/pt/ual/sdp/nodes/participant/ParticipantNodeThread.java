@@ -31,6 +31,13 @@ public class ParticipantNodeThread extends Thread {
                 printWriter.println("OK");
                 printWriter.flush();
                 break;
+            case "C":
+                key = scanner.nextLine();
+                value = participantNode.getDatabase().get(key);
+                value = value == null ? "[Key not present]" : value;
+                printWriter.println(value);
+                printWriter.flush();
+                break;
             default:
                 break;
         }
