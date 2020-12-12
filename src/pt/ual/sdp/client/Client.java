@@ -44,6 +44,7 @@ public class Client {
                     System.out.println(response);
                     break;
                 case "C":
+                case "D":
                     key = commands[1];
                     socket = SocketUtil.getSocket(mainNodeAddress, mainNodePort);
                     mainNodePrintWriter = SocketUtil.getPrintWriter(socket);
@@ -56,9 +57,6 @@ public class Client {
                     mainNodeScanner = SocketUtil.getScanner(socket);
                     value = mainNodeScanner.nextLine();
                     System.out.println(value);
-                    break;
-                case "D":
-                    key = commands[1];
                     break;
                 case "Q":
                     System.exit(0);

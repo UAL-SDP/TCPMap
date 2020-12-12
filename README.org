@@ -76,15 +76,16 @@ ParticipantNode -> "ParticipantNodeThread <<Thread>>" ** : create(socket)
       - [X] MainNode contacta ParticipantNode
       - [X] ParticipantNode envia V para MainNode
       - [X] MainNode envia V para Client
-    - [0/5] D K
-      - [ ] Contactar o MainNode
-      - [ ] MainNode calcula hash
-      - [ ] MainNode contacta ParticipantNode
-      - [0/2] ParticipantNode remove a key
-        - [ ] Devolve mensagem de erro se key lhe pertencer mas não existir
+    - [5/5] D K
+      - [X] Contactar o MainNode
+      - [X] MainNode calcula hash
+      - [X] MainNode contacta ParticipantNode
+      - [2/3] ParticipantNode remove a key
+        - [X] Devolve mensagem de remoção com sucesso
+        - [X] Devolve mensagem de erro se key lhe pertencer mas não existir
         - [ ] Devolve mensagem de erro se não lhe pertencer
-      - [ ] ParticipantNode responde a MainNode
-      - [ ] MainNode responde a Client
+      - [X] ParticipantNode responde a MainNode
+      - [X] MainNode responde a Client
     - [X] Q
     - [ ] L
       - Todos os nós escrevem o conteúdo no seu output

@@ -45,6 +45,7 @@ public class MainNodeClientOperation extends Thread {
                 clientPrintWriter.flush();
                 break;
             case "C":
+            case "D":
                 key = scanner.nextLine();
                 participantNodeSocket = getParticipantNodeSocket(key);
                 participantNodePrintWriter = SocketUtil.getPrintWriter(participantNodeSocket);
@@ -59,8 +60,6 @@ public class MainNodeClientOperation extends Thread {
                 clientPrintWriter = SocketUtil.getPrintWriter(clientSocket);
                 clientPrintWriter.println(response);
                 clientPrintWriter.flush();
-                break;
-            case "D":
                 break;
             case "L":
                 break;

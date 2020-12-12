@@ -21,7 +21,7 @@ public class ParticipantNodeThread extends Thread {
         Scanner scanner = SocketUtil.getScanner(socket);
         PrintWriter printWriter = SocketUtil.getPrintWriter(socket);
         String operation = scanner.nextLine();
-        String key, value;
+        String key, value, response;
         switch (operation) {
             case "R":
                 key = scanner.nextLine();
@@ -34,8 +34,15 @@ public class ParticipantNodeThread extends Thread {
             case "C":
                 key = scanner.nextLine();
                 value = participantNode.getDatabase().get(key);
-                value = value == null ? "[Key not present]" : value;
+                value = value == null ? "[Key '"+key+"' not present]" : value;
                 printWriter.println(value);
+                printWriter.flush();
+                break;
+            case "D":
+                key = scanner.nextLine();
+                value = participantNode.getDatabase().remove(key);
+                response = value == null ? "[Key '"+key+"' not present]" : "[Key '"+key+"' removed]";
+                printWriter.println(response);
                 printWriter.flush();
                 break;
             default:
