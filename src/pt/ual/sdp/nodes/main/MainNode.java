@@ -1,8 +1,4 @@
-package pt.ual.sdp.views;
-
-import pt.ual.sdp.MainNodeClient;
-import pt.ual.sdp.MainNodeRegister;
-import pt.ual.sdp.ParticipantNodeRecord;
+package pt.ual.sdp.nodes.main;
 
 import java.util.HashMap;
 import java.util.Map;

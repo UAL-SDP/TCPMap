@@ -1,4 +1,4 @@
-package pt.ual.sdp.views;
+package pt.ual.sdp.client;
 
 import pt.ual.sdp.util.SocketUtil;
 

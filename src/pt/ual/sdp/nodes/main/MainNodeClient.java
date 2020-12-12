@@ -1,6 +1,4 @@
-package pt.ual.sdp;
-
-import pt.ual.sdp.views.MainNode;
+package pt.ual.sdp.nodes.main;
 
 import java.io.IOException;
 import java.net.ServerSocket;

@@ -1,7 +1,7 @@
 package pt.ual.sdp;
 
 import org.junit.jupiter.api.Test;
-import pt.ual.sdp.views.MainNode;
+import pt.ual.sdp.nodes.main.MainNode;
 
 import static org.junit.jupiter.api.Assertions.*;
 

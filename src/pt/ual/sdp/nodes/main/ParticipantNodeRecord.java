@@ -1,4 +1,4 @@
-package pt.ual.sdp;
+package pt.ual.sdp.nodes.main;
 
 public class ParticipantNodeRecord {
     private String address;

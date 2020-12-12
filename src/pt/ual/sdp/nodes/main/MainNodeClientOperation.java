@@ -1,7 +1,6 @@
-package pt.ual.sdp;
+package pt.ual.sdp.nodes.main;
 
 import pt.ual.sdp.util.SocketUtil;
-import pt.ual.sdp.views.MainNode;
 
 import java.io.PrintWriter;
 import java.net.Socket;

@@ -1,4 +1,4 @@
-package pt.ual.sdp;
+package pt.ual.sdp.nodes.participant;
 
 import pt.ual.sdp.util.SocketUtil;
 
