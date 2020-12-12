@@ -1,19 +1,53 @@
 * Objetivos
 * Arquitetura
 ** MainNode
-   #+begin_src plantuml :file figures/main_node_start.eps :noexport
+   #+begin_src plantuml :file figures/main_node_start.png :noexport
 @startuml
 participant MainNode
 participant "MainNodeRegister <<Thread>>"
 participant "MainNodeClient <<Thread>>"
-mainNode -> MainNode : main
-MainNode -> "MainNodeRegister <<Thread>>" : create
-MainNode -> "MainNodeClient <<Thread>>" : create
+MainNode -> MainNode : main
+MainNode -> "MainNodeRegister <<Thread>>" ** : create(mainNode)
+MainNode -> "MainNodeClient <<Thread>>" ** : create(mainNode)
 @enduml
    #+end_src
    #+ATTR_LATEX: :scale .35
    #+results:
-   [[file:figures/main_node_start.eps]]
+   [[file:figures/main_node_start.png]]
+   #+begin_src plantuml :file figures/main_node_participant.png :noexport
+@startuml
+participant Client
+participant MainNode
+participant "MainNodeClient <<Thread>>"
+participant "MainNodeClientOperation <<Thread>>"
+participant ParticipantNode
+participant "ParticipantNodeThread <<Thread>>"
+MainNode -> "MainNodeClient <<Thread>>" ** : create
+Client -> Client : main()
+"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" :  accept()
+Client -> "MainNodeClient <<Thread>>" : connect
+"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" : create socket
+"MainNodeClient <<Thread>>" --> Client : socket
+"MainNodeClient <<Thread>>" -> "MainNodeClientOperation <<Thread>>" ** : create(socket)
+Client -> "MainNodeClientOperation <<Thread>>" : write operation, key, [data?]
+"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : read operation, key, [data?]
+"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : get participant node record from key
+"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : get participant address and port
+ParticipantNode -> ParticipantNode : accept()
+"MainNodeClientOperation <<Thread>>" -> "ParticipantNode" : connect
+ParticipantNode -> ParticipantNode : create socket
+ParticipantNode --> "MainNodeClientOperation <<Thread>>" : socket
+ParticipantNode -> "ParticipantNodeThread <<Thread>>" ** : create(socket)
+"MainNodeClientOperation <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : write operation, key, [data?]
+"ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : read operation, key, [data?]
+"ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : perform operation
+"ParticipantNodeThread <<Thread>>" --> "MainNodeClientOperation <<Thread>>" : response
+"MainNodeClientOperation <<Thread>>" --> Client : response
+@enduml
+#+end_src
+   #+ATTR_LATEX: :scale .35
+   #+results:
+   [[file:figures/main_node_participant.png]]
    
 * Tarefas
   - [2/3] MainNode
@@ -26,22 +60,31 @@ MainNode -> "MainNodeClient <<Thread>>" : create
     - [X] Registar no nó principal
       - [X] Obter o seu identificador
     - [ ] Disponibilizar um servidor para participar na disperção
-  - [1/5] Client
-    - [-] R K V
+  - [1/2] Client
+    - [3/3] R K V
       - [X] Contactar o MainNode
       - [X] MainNode calcula hash com base em K
       - [X] MainNode contacta ParticipantNode
-      - [-] ParticipantNode regista K,V
-        - [ ] Verifica que K lhe pertence
+      - [1/1] ParticipantNode regista K,V
+        - [1/2] Verifica que K lhe pertence
+          - [X] Devolve mensagem de erro se lhe pertencer mas não existir
+          - [ ] Devolve mensagem de erro se não lhe pertencer
         - [X] Regista K,V e responde OK
-    - [-] C K
+    - [5/5] C K
       - [X] Contactar o MainNode
+      - [X] MainNode calcula hash
+      - [X] MainNode contacta ParticipantNode
+      - [X] ParticipantNode envia V para MainNode
+      - [X] MainNode envia V para Client
+    - [0/5] D K
+      - [ ] Contactar o MainNode
       - [ ] MainNode calcula hash
       - [ ] MainNode contacta ParticipantNode
-      - [ ] ParticipantNode envia V para MainNode
-      - [ ] MainNode envia V para Client
-    - [ ] D K
-      - delete
+      - [0/2] ParticipantNode remove a key
+        - [ ] Devolve mensagem de erro se key lhe pertencer mas não existir
+        - [ ] Devolve mensagem de erro se não lhe pertencer
+      - [ ] ParticipantNode responde a MainNode
+      - [ ] MainNode responde a Client
     - [X] Q
     - [ ] L
       - Todos os nós escrevem o conteúdo no seu output
