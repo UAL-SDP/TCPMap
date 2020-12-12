@@ -21,7 +21,7 @@ public class MainNodeRegister extends Thread {
     }
 
     @Override
-    public synchronized void start() {
+    public synchronized void run() {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(port);
@@ -43,7 +43,7 @@ public class MainNodeRegister extends Thread {
             int nodeId = nodeCount++;
             ParticipantNodeRecord nodeRecord = new ParticipantNodeRecord(nodeAddress, nodePort);
             mainNode.getNodes().put(String.valueOf(nodeId), nodeRecord);
-            PrintWriter printWriter = SocketUtil.getPrintWritter(socket);
+            PrintWriter printWriter = SocketUtil.getPrintWriter(socket);
             printWriter.println(nodeId);
             printWriter.flush();
         }

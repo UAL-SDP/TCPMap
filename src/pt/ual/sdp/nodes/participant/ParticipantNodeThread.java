@@ -17,9 +17,9 @@ public class ParticipantNodeThread extends Thread {
     }
 
     @Override
-    public synchronized void start() {
+    public synchronized void run() {
         Scanner scanner = SocketUtil.getScanner(socket);
-        PrintWriter printWriter = SocketUtil.getPrintWritter(socket);
+        PrintWriter printWriter = SocketUtil.getPrintWriter(socket);
         String operation = scanner.nextLine();
         String key, value;
         switch (operation) {

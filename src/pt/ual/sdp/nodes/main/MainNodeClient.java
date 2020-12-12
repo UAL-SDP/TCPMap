@@ -15,7 +15,7 @@ public class MainNodeClient extends Thread {
     }
 
     @Override
-    public synchronized void start() {
+    public synchronized void run() {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(port);
