@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TCPMap:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TCPMap_jar</output-path>
+    <root id="archive" name="TCPMap.jar">
+      <element id="module-output" name="TCPMap" />
+    </root>
+  </artifact>
+</component>
