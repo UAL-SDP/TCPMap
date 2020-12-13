@@ -7,7 +7,11 @@
 ** Operações R, C, e D
    As operações de registo, consulta, e remoção de chaves são implementadas pelo
    seguinte protocolo:
-   [[./figures/main_node_participant.png]]
+   [[./figures/rcd_operations.png]]
+** Operação L
+   A operação de listagem de conteúdo de nós participantes é impelmentada com um
+   ciclo no tratamento da resposta ao pedido do cliente.
+   [[./figures/l_operation.png]]
 * Tarefas
   - [3/3] MainNode
     - [X] Disponibiliza um servidor para registo de nós participantes
