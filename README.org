@@ -1,94 +1,13 @@
 * Objetivos
 * Arquitetura
-** MainNode
-   #+begin_src plantuml :file figures/main_node_start.png :noexport
-@startuml
-participant MainNode
-participant "MainNodeRegister <<Thread>>"
-participant "MainNodeClient <<Thread>>"
-MainNode -> MainNode : main
-MainNode -> "MainNodeRegister <<Thread>>" ** : create(mainNode)
-MainNode -> "MainNodeClient <<Thread>>" ** : create(mainNode)
-@enduml
-   #+end_src
-   #+ATTR_LATEX: :scale .35
-   #+results:
-   [[file:figures/main_node_start.png]]
-   #+begin_src plantuml :file figures/main_node_participant.png :noexport
-@startuml
-participant Client
-participant MainNode
-participant "MainNodeClient <<Thread>>"
-participant "MainNodeClientOperation <<Thread>>"
-participant ParticipantNode
-participant "ParticipantNodeThread <<Thread>>"
-MainNode -> "MainNodeClient <<Thread>>" ** : create
-Client -> Client : main()
-"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" :  accept()
-Client -> "MainNodeClient <<Thread>>" : connect
-"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" : create socket
-"MainNodeClient <<Thread>>" --> Client : socket
-"MainNodeClient <<Thread>>" -> "MainNodeClientOperation <<Thread>>" ** : create(socket)
-Client -> "MainNodeClientOperation <<Thread>>" : write operation, key, [data?]
-"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : read operation, key, [data?]
-"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : get participant node record from key
-"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : get participant address and port
-ParticipantNode -> ParticipantNode : accept()
-"MainNodeClientOperation <<Thread>>" -> "ParticipantNode" : connect
-ParticipantNode -> ParticipantNode : create socket
-ParticipantNode --> "MainNodeClientOperation <<Thread>>" : socket
-ParticipantNode -> "ParticipantNodeThread <<Thread>>" ** : create(socket)
-"MainNodeClientOperation <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : write operation, key, [data?]
-"ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : read operation, key, [data?]
-"ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : perform operation
-"ParticipantNodeThread <<Thread>>" --> "MainNodeClientOperation <<Thread>>" : response
-"MainNodeClientOperation <<Thread>>" --> Client : response
-@enduml
-#+end_src
-   #+ATTR_LATEX: :scale .35
-   #+results:
-   [[file:figures/main_node_participant.png]]
-
-   #+begin_src plantuml :file figures/l_operation.png :noexport
-@startuml
-box "Client process"
-        participant Client
-end box
-box "MainNode process"
-        participant MainNode
-        participant "MainNodeClient <<Thread>>"
-        participant "MainNodeClientOperation <<Thread>>"
-end box
-box "ParticipantNode process"
-        participant ParticipantNode
-        participant "ParticipantNodeThread <<Thread>>"
-end box
-MainNode -> "MainNodeClient <<Thread>>" ** : create
-Client -> Client : main()
-"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" :  accept()
-Client -> "MainNodeClient <<Thread>>" : connect
-"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" : create socket
-"MainNodeClient <<Thread>>" --> Client : socket
-"MainNodeClient <<Thread>>" -> "MainNodeClientOperation <<Thread>>" ** : create(socket)
-Client -> "MainNodeClientOperation <<Thread>>" : write operation L
-"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : read operation L
-loop participant node records
-        "MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : get address and port from participant node record
-        ParticipantNode -> ParticipantNode : accept()
-        "MainNodeClientOperation <<Thread>>" -> "ParticipantNode" : connect
-        ParticipantNode -> ParticipantNode : create socket
-        ParticipantNode --> "MainNodeClientOperation <<Thread>>" : socket
-        ParticipantNode -> "ParticipantNodeThread <<Thread>>" ** : create(socket)
-        "MainNodeClientOperation <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : write operation L
-        "ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : read operation L
-        "ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : print database contents on stdout
-end
-@enduml
-#+end_src
-   #+ATTR_LATEX: :scale .35
-   #+results:
-   [[file:figures/l_operation.png]]
-   
+** Nó principal
+   O nó principal inicia e lança duas /threads/: uma para o registo de nós
+   participantes, e outra para o diálogo com clientes.
+   [[./figures/main_node_start.png]]
+** Operações R, C, e D
+   As operações de registo, consulta, e remoção de chaves são implementadas pelo
+   seguinte protocolo:
+   [[./figures/main_node_participant.png]]
 * Tarefas
   - [3/3] MainNode
     - [X] Disponibiliza um servidor para registo de nós participantes
@@ -131,4 +50,6 @@ end
       - [2/2] Todos os nós escrevem o conteúdo no seu output
         - [X] Lista de K V, por linha
         - [X] Se não existir informação: Sem itens
-  - [ ] Docker
+  - [2/2] Docker
+    - [X] Criar Dockerfile
+    - [X] Executar cenário de exemplo
