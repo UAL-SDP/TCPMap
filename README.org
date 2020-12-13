@@ -4,6 +4,10 @@
    O nó principal inicia e lança duas /threads/: uma para o registo de nós
    participantes, e outra para o diálogo com clientes.
    [[./figures/main_node_start.png]]
+** Registo de nós participantes
+   O regiso de participantes é efetuado no início do processo de cada nó
+   participante. Deve acontecer antes do primeiro contacto de clientes.
+   [[./figures/participant_registry.png]]
 ** Operações R, C, e D
    As operações de registo, consulta, e remoção de chaves são implementadas pelo
    seguinte protocolo:

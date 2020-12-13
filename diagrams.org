@@ -1,85 +1,139 @@
 #+begin_src plantuml :file figures/main_node_start.png :noexport
 @startuml
 participant MainNode
-participant "MainNodeRegister <<Thread>>"
-participant "MainNodeClient <<Thread>>"
+participant MainNodeRegister <<Thread>>
+participant MainNodeClient <<Thread>>
+
 MainNode -> MainNode : main
-MainNode -> "MainNodeRegister <<Thread>>" ** : create(mainNode)
-MainNode -> "MainNodeClient <<Thread>>" ** : create(mainNode)
+MainNode -> MainNode : create participant database
+
+MainNode -> MainNodeRegister ** : create(mainNode)
+MainNodeRegister -> MainNodeRegister : accept()
+
+MainNode -> MainNodeClient ** : create(mainNode)
+MainNodeClient -> MainNodeClient : accept()
 @enduml
 #+end_src
 #+ATTR_LATEX: :scale .35
 #+results:
 [[file:figures/main_node_start.png]]
 
-#+begin_src plantuml :file figures/main_node_participant.png :noexport
+#+begin_src plantuml :file figures/participant_registry.png :noexport
 @startuml
-participant Client
-participant MainNode
-participant "MainNodeClient <<Thread>>"
-participant "MainNodeClientOperation <<Thread>>"
-participant ParticipantNode
-participant "ParticipantNodeThread <<Thread>>"
-MainNode -> "MainNodeClient <<Thread>>" ** : create
-Client -> Client : main()
-"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" :  accept()
-Client -> "MainNodeClient <<Thread>>" : connect
-"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" : create socket
-"MainNodeClient <<Thread>>" --> Client : socket
-"MainNodeClient <<Thread>>" -> "MainNodeClientOperation <<Thread>>" ** : create(socket)
-Client -> "MainNodeClientOperation <<Thread>>" : write operation, key, [data?]
-"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : read operation, key, [data?]
-"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : get participant node record from key
-"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : get participant address and port
-ParticipantNode -> ParticipantNode : accept()
-"MainNodeClientOperation <<Thread>>" -> "ParticipantNode" : connect
-ParticipantNode -> ParticipantNode : create socket
-ParticipantNode --> "MainNodeClientOperation <<Thread>>" : socket
-ParticipantNode -> "ParticipantNodeThread <<Thread>>" ** : create(socket)
-"MainNodeClientOperation <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : write operation, key, [data?]
-"ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : read operation, key, [data?]
-"ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : perform operation
-"ParticipantNodeThread <<Thread>>" --> "MainNodeClientOperation <<Thread>>" : response
-"MainNodeClientOperation <<Thread>>" --> Client : response
+box MainNode process
+        participant MainNode
+        participant MainNodeRegister <<Thread>>
+end box
+box ParticipantNode process
+        participant ParticipantNode
+        participant ParticipantNodeOperation <<Thread>>
+end box
+
+MainNode -> MainNode : main
+MainNode -> MainNode : create participant database
+
+MainNode -> MainNodeRegister **: create(mainNode)
+MainNodeRegister -> MainNodeRegister : accept
+
+ParticipantNode -> ParticipantNode : main
+ParticipantNode -> MainNodeRegister : connect
+MainNodeRegister -> MainNodeRegister : read address from socket     
+ParticipantNode -> MainNodeRegister : send port
+MainNodeRegister -> MainNodeRegister : generate participant id
+MainNodeRegister -> MainNodeRegister : record id, address, and port\non participant database
+MainNodeRegister -> ParticipantNode : send id
+
+ParticipantNode -> ParticipantNodeOperation **: create(participantNode)
+ParticipantNodeOperation -> ParticipantNodeOperation : respond to\nMainNode\nrequests
 @enduml
 #+end_src
-   #+ATTR_LATEX: :scale .35
-   #+results:
-   [[file:figures/main_node_participant.png]]
+#+ATTR_LATEX: :scale .35
+#+results:
+[[file:figures/participant_registry.png]]
 
-   #+begin_src plantuml :file figures/l_operation.png :noexport
+
+
+#+begin_src plantuml :file figures/rcd_operations.png :noexport
 @startuml
-box "Client process"
+box Client process
         participant Client
 end box
-box "MainNode process"
+box MainNode process
         participant MainNode
-        participant "MainNodeClient <<Thread>>"
-        participant "MainNodeClientOperation <<Thread>>"
+        participant MainNodeClient <<Thread>>
+        participant MainNodeClientOperation <<Thread>>
 end box
-box "ParticipantNode process"
+box ParticipantNode process
         participant ParticipantNode
-        participant "ParticipantNodeThread <<Thread>>"
-end box
-MainNode -> "MainNodeClient <<Thread>>" ** : create
+        participant ParticipantNodeThread <<Thread>>
+end Box
+MainNode -> MainNode : create participant database
+MainNode -> MainNodeClient ** : create
+ParticipantNode -> ParticipantNode : register with main node
+ParticipantNode -> ParticipantNode : accept()
+...
 Client -> Client : main()
-"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" :  accept()
-Client -> "MainNodeClient <<Thread>>" : connect
-"MainNodeClient <<Thread>>" -> "MainNodeClient <<Thread>>" : create socket
-"MainNodeClient <<Thread>>" --> Client : socket
-"MainNodeClient <<Thread>>" -> "MainNodeClientOperation <<Thread>>" ** : create(socket)
-Client -> "MainNodeClientOperation <<Thread>>" : write operation L
-"MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : read operation L
+MainNodeClient -> MainNodeClient :  accept()
+Client -> MainNodeClient : connect
+MainNodeClient -> MainNodeClient : create socket
+MainNodeClient --> Client : socket
+MainNodeClient -> MainNodeClientOperation ** : create(socket)
+
+Client -> MainNodeClientOperation : write operation, key, [data?]
+MainNodeClientOperation -> MainNodeClientOperation : read operation, key, [data?]
+MainNodeClientOperation -> MainNodeClientOperation : get participant node record from key
+MainNodeClientOperation -> MainNodeClientOperation : get participant address and port
+
+MainNodeClientOperation -> ParticipantNode : connect
+ParticipantNode -> ParticipantNode : create socket
+ParticipantNode --> MainNodeClientOperation : socket
+ParticipantNode -> ParticipantNodeThread ** : create(socket)
+
+MainNodeClientOperation -> ParticipantNodeThread : write operation, key, [data?]
+ParticipantNodeThread -> ParticipantNodeThread : read operation, key, [data?]
+ParticipantNodeThread -> ParticipantNodeThread : perform operation
+ParticipantNodeThread --> MainNodeClientOperation : response
+
+MainNodeClientOperation --> Client : response
+@enduml
+#+end_src
+#+ATTR_LATEX: :scale .35
+#+results:
+[[file:figures/rcd_operations.png]]
+
+#+begin_src plantuml :file figures/l_operation.png :noexport
+@startuml
+box Client process
+        participant Client
+end box
+box MainNode process
+        participant MainNode
+        participant MainNodeClient <<Thread>>
+        participant MainNodeClientOperation <<Thread>>
+end box
+box ParticipantNode process
+        participant ParticipantNode
+        participant ParticipantNodeThread <<Thread>>
+end box
+MainNode -> MainNodeClient ** : create
+Client -> Client : main()
+MainNodeClient -> MainNodeClient :  accept()
+Client -> MainNodeClient : connect
+MainNodeClient -> MainNodeClient : create socket
+MainNodeClient --> Client : socket
+MainNodeClient -> MainNodeClientOperation ** : create(socket)
+Client -> MainNodeClientOperation : write L operation
+MainNodeClientOperation -> MainNodeClientOperation : read L operation
 loop participant node records
-        "MainNodeClientOperation <<Thread>>" -> "MainNodeClientOperation <<Thread>>" : get address and port from participant node record
+        MainNodeClientOperation -> MainNodeClientOperation : get address and port from participant node record
         ParticipantNode -> ParticipantNode : accept()
-        "MainNodeClientOperation <<Thread>>" -> "ParticipantNode" : connect
+        MainNodeClientOperation -> "ParticipantNode" : connect
         ParticipantNode -> ParticipantNode : create socket
-        ParticipantNode --> "MainNodeClientOperation <<Thread>>" : socket
-        ParticipantNode -> "ParticipantNodeThread <<Thread>>" ** : create(socket)
-        "MainNodeClientOperation <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : write operation L
-        "ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : read operation L
-        "ParticipantNodeThread <<Thread>>" -> "ParticipantNodeThread <<Thread>>" : print database contents on stdout
+        ParticipantNode --> MainNodeClientOperation : socket
+        ParticipantNode -> ParticipantNodeThread ** : create(socket)
+        MainNodeClientOperation -> ParticipantNodeThread : write L operation
+        ParticipantNodeThread -> ParticipantNodeThread : read L operation
+        ParticipantNodeThread -> ParticipantNodeThread : print database contents on stdout
 end
 @enduml
 #+end_src
